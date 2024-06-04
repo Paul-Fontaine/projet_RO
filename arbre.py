@@ -1,57 +1,157 @@
+import timeit
+
 from items_dict import items_dict
 
-class Noeud :
-    def __init__(self, poids, utility, liste_precedent, index):
+
+class Noeud:
+    def __init__(self, object, parent: "Noeud", depth: int = 0, prendre: bool = False):
         self.left = None
         self.right = None
-        self.poids = poids
-        self.utility = utility
-        self.liste_precedent = liste_precedent
-        self.index = index
+        self.parent = parent
+        self.object = object
+        self.prendre = prendre
+        self.depth = depth
 
-    def __str__(self):  # méthode spéciale python qui permet de réaliser des conversions lorsque l’objet
-        # est passé en paramètre de certaines fonctions
-        return str(self.data)
+    def __str__(self):
+        return f"{self.object}"
+
+class ArbreBinaire:
+    def __init__(self, items, W: float = 0.6):
+        self.W = W+0.0001
+        self.items = items  # liste des noms, poids et utilités des objets
+        self.best_utility = 0
+        self.best_noeud = None
+        self.root = Noeud({'weight': 0, 'utility': 0}, parent=None)
+
+    def make_tree(self, parent: Noeud):
+        if parent.depth >= len(self.items):  # si on est arrivé en bas
+            return
+
+        # mise à jour de la borne inférieure
+        current_utility = self.branch_utility(parent)
+        if current_utility > self.best_utility:
+            self.best_utility = current_utility
+            self.best_noeud = parent
+
+        # si les objets qu'ils restent à ajouter n'ont aucune chance
+        # de faire dépasser la borne inférieure de l'arbre (totale) on arrête
+        if self.max_possible_branch_utility(parent) > self.best_utility:
+            # si on dépasse le poids maximal on n'ajoute pas à gauche, mais quand même à droite
+            # n+1 a peut-etre une masse trop grande, mais peut-etre pas n+2
+            if self.branch_weight(parent) + self.items[parent.depth]['weight'] <= self.W:
+                parent.left = Noeud(self.items[parent.depth], parent=parent, depth=parent.depth + 1, prendre=True)
+                self.make_tree(parent.left)
+
+            parent.right = Noeud(self.items[parent.depth], parent=parent, depth=parent.depth + 1)
+            self.make_tree(parent.right)
+
+    def branch_weight(self, noeud: Noeud):
+        weight = 0
+        while noeud.depth >= 1:
+            if noeud.prendre:
+                weight += noeud.object['weight']
+            noeud = noeud.parent
+        return weight
+
+    def branch_utility(self, noeud: Noeud):
+        utility = 0
+        while noeud.depth >= 1:
+            if noeud.prendre:
+                utility += noeud.object['utility']
+            noeud = noeud.parent
+        return utility
+
+    def max_possible_branch_utility(self, noeud: Noeud):
+        utility = self.branch_utility(noeud)
+        utility += sum([item['weight'] for item in self.items[noeud.depth::]])
+        return utility
+
+    def get_best_combi(self):
+        best_combi = []
+        noeud = self.best_noeud
+        while noeud.depth >= 1:
+            if noeud.prendre:
+                best_combi.append(noeud.object)
+            noeud = noeud.parent
+        return best_combi
 
 
-class ArbreBinaire :
-    def __init__(self, poids_sac_max, data, total_utility, index):
-        self.poids_sac_max = poids_sac_max
-        self.meilleure_valeur=0
-        self.objets = data  # liste des poids, valeur
-        self.meilleur_combinaison = []
-        self.borne_inf = 0 #deviendra le meilleur
-        self.borne_sup = total_utility
-        self.index = index
+def print_tree(root, val="val", left="left", right="right"):
+    def display(root, val=val, left=left, right=right):
+        """Returns list of strings, width, height, and horizontal coordinate of the root."""
+        # No child.
+        if getattr(root, right) is None and getattr(root, left) is None:
+            line = f"{getattr(root, val)['weight']}, {getattr(root, val)['utility']}"
+            width = len(line)
+            height = 1
+            middle = width // 2
+            return [line], width, height, middle
+
+        # Only left child.
+        if getattr(root, right) is None:
+            lines, n, p, x = display(getattr(root, left))
+            s = f"{getattr(root, val)['weight']}, {getattr(root, val)['utility']}"
+            u = len(s)
+            first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
+            second_line = x * ' ' + '/' + (n - x - 1 + u) * ' '
+            shifted_lines = [line + u * ' ' for line in lines]
+            return [first_line, second_line] + shifted_lines, n + u, p + 2, n + u // 2
+
+        # Only right child.
+        if getattr(root, left) is None:
+            lines, n, p, x = display(getattr(root, right))
+            s = f"{getattr(root, val)['weight']}, {getattr(root, val)['utility']}"
+            u = len(s)
+            first_line = s + x * '_' + (n - x) * ' '
+            second_line = (u + x) * ' ' + '\\' + (n - x - 1) * ' '
+            shifted_lines = [u * ' ' + line for line in lines]
+            return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
+
+        # Two children.
+        left, n, p, x = display(getattr(root, left))
+        right, m, q, y = display(getattr(root, right))
+        s = f"{getattr(root, val)['weight']}, {getattr(root, val)['utility']}"
+        u = len(s)
+        first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
+        second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '
+        if p < q:
+            left += [n * ' '] * (q - p)
+        elif q < p:
+            right += [m * ' '] * (p - q)
+        zipped_lines = zip(left, right)
+        lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
+        return lines, n + m + u, max(p, q) + 2, n + u // 2
+
+    lines, *_ = display(root, val, left, right)
+    for line in lines:
+        print(line)
 
 
-    def explorer(self, noeud):
-        if noeud.index >= len(self.objets):#si l'indice est plus grand que le nombre de d'objet
-            return 1
+def test_arbre():
+    arbre = ArbreBinaire(items_dict)
+    arbre.make_tree(arbre.root)
+    for object in arbre.get_best_combi():
+        print(object)
+    print()
+    print(arbre.best_utility)
+    print()
 
-        # Explorer le sous-arbre gauche (prendre l'objet)
-        # self.objets[noeud.index] est le index-ème objet
-        if noeud.poids + self.objets[noeud.index][0] <= self.poids_sac_max:
-            left = Noeud( noeud.poids + self.objets[noeud.index][0],  #la gauche devient un noeud que l'on definit : left
-                         noeud.valeur + self.objets[noeud.index][1],
-                         noeud.liste_precedent.append(),
-                         noeud.index + 1)
-            if left.valeur > self.meilleure_valeur:
-                self.meilleure_valeur = left.valeur
-                self.meilleur_combinaison = left.objets_pris
-            self.explorer(left)
+    setup = """
+    from items_dict import items_dict
+    from arbre import ArbreBinaire
+    """
+    code = """
+    arbre = ArbreBinaire(items_dict)
+    arbre.make_tree(arbre.root);
+    best_combi = arbre.get_best_combi()
+    """
 
-
-        # Explorer le sous-arbre droit (ne pas prendre l'objet)
-        droite = Noeud(noeud.niveau + 1, noeud.poids, noeud.valeur, noeud.objets_pris)
-        self.explorer(right)
-
-
-
-
-if __name__ == "__main__":
+    d = timeit.timeit(stmt=code, setup=setup, number=1000)
+    print(d, "ms")
 
 
+if __name__ == '__main__':
+    test_arbre()
 
 
 

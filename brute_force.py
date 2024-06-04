@@ -34,4 +34,5 @@ def test_brute_force():
     print(f"utilité : {best_bag['utility']}")
 
 
-test_brute_force()
+if __name__ == '__main__':
+    test_brute_force()
