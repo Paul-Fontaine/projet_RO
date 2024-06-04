@@ -1,5 +1,5 @@
+import time
 import timeit
-
 from items_dict import items_dict
 
 
@@ -15,9 +15,10 @@ class Noeud:
     def __str__(self):
         return f"{self.object}"
 
+
 class ArbreBinaire:
     def __init__(self, items, W: float = 0.6):
-        self.W = W+0.0001
+        self.W = W + 0.0001
         self.items = items  # liste des noms, poids et utilités des objets
         self.best_utility = 0
         self.best_noeud = None
@@ -137,24 +138,31 @@ def test_arbre():
     print()
 
     setup = """
-    from items_dict import items_dict
-    from arbre import ArbreBinaire
+from items_dict import items_dict
+from arbre import ArbreBinaire
     """
     code = """
-    arbre = ArbreBinaire(items_dict)
-    arbre.make_tree(arbre.root);
-    best_combi = arbre.get_best_combi()
+arbre = ArbreBinaire(items_dict)
+arbre.make_tree(arbre.root)
+best_combi = arbre.get_best_combi()
     """
 
     d = timeit.timeit(stmt=code, setup=setup, number=1000)
-    print(d, "ms")
+    print(d, "ms")  # 12.7 ms
+
+
+def test_arbre_time():
+    s = time.time()
+    arbre = ArbreBinaire(items_dict)
+    arbre.make_tree(arbre.root)
+    d = time.time() - s
+    for object in arbre.get_best_combi():
+        print(object)
+    print()
+    print(arbre.best_utility)
+    print()
+    print(d * 1000, "ms")
 
 
 if __name__ == '__main__':
     test_arbre()
-
-
-
-
-
-
