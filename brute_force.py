@@ -22,12 +22,16 @@ def find_best_bag(items, W: float = 0.6):
     return find_max_utility(make_combinations(items, W+0.0001))
 
 
-s_time = time.time()
-best_bag = find_best_bag(items_dict)
-e_time = time.time()
+def test_brute_force():
+    s_time = time.time()
+    best_bag = find_best_bag(items_dict)
+    e_time = time.time()
 
-print(f"{e_time-s_time} s")
-for object in best_bag['objects']:
-    print(object)
-print(f"poids : {best_bag['weight']}")
-print(f"utilité : {best_bag['utility']}")
+    print(f"{e_time-s_time} s")
+    for object in best_bag['objects']:
+        print(object)
+    print(f"poids : {best_bag['weight']}")
+    print(f"utilité : {best_bag['utility']}")
+
+
+test_brute_force()
