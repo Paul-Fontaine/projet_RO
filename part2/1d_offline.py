@@ -1,7 +1,7 @@
 from marchandises_ import *
 
 
-def first_fit(objects: 'LIst[Marchandise]', bin_length: int):
+def best_fit(objects: 'LIst[Marchandise]', bin_length: int):
     n = len(objects)
     remaining_space_in_bins = [L]*n
     marchandises = sorted(objects, key=lambda m: m.l, reverse=True)  # sort marchandises by their length
@@ -16,4 +16,4 @@ def first_fit(objects: 'LIst[Marchandise]', bin_length: int):
 
 
 if __name__ == '__main__':
-    print(first_fit(marchandises, L))
+    print(best_fit(marchandises, L))
