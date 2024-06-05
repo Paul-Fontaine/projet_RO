@@ -1,93 +1,54 @@
 import random
 import time
-
+from classes import Bin
 from marchandises_ import *
 
 
-class Bin:
-    def __init__(self):
-        self.shelves = []
-        self.remaining_width = W  # W - sum of the shelves width
-
-    def can_add_shelf(self, shelf_width):
-        return shelf_width < self.remaining_width
-
-    def add_marchandise(self, m:Marchandise) -> bool:
-        # try to add the marchandise in the existing shelves
-        for shelf in self.shelves:
-            if shelf.can_fit(m):
-                shelf.add_marchandise(m)
-                return True
-
-        # if the marchandise has not been added in an existing shelf,
-        # and there is no more width in the bin we cannot add this marchandise
-        if not self.can_add_shelf(m.w):
-            return False
-
-        # the marchandise has not been added to an existing shelf,
-        # and we can add a new shelf with this marchandise
-        new_shelf = Shelf(self.remaining_width)
-        new_shelf.add_marchandise(m)
-        self.shelves.append(new_shelf)
-        self.remaining_width -= new_shelf.width
-        return True
-
-    def __str__(self):
-        str = ""
-        for shelf in self.shelves:
-            str += f"{shelf}\n"
-        str += "\n"
-        return str
-
-class Shelf:
-    def __init__(self, max_width):
-        self.max_width = max_width  # the height available in the bin, if an item is too tall it goes in a new bin
-        self.width = 0
-        self.remaining_length = L
-        self.marchandises = []
-
-    def can_fit(self, m: Marchandise):
-        if m.w > self.max_width:  # if the shelf cannot increase its width because of bin max width
-            return False
-        if m.l > self.remaining_length:  # if the shelf is "full" for this marchandise
-            return False
-        return True
-
-    def add_marchandise(self, m: Marchandise):
-        self.marchandises.append(m)
-        self.remaining_length -= m.l
-        self.width = max(self.width, m.w)  # if the marchandise is the widest of the shelf
-
-    def __str__(self):
-        str = ""
-        for m in self.marchandises:
-            str += f"{m.name}, "
-        return str
-
-
-# it's a first fit algorithm, best fit could be more optimal but if a really optimal solution use the guillotine method
+# it's a first fit algorithm,
+# best fit could be more optimal but more computationnaly expensive
+# if you want a really optimal solution, use the guillotine method
 def shelf_2d_bin_packing(marchandises):
-    bins = []
+    marchandises_ = sorted(marchandises, key=lambda m: m.w, reverse=True)  # sort by width
+    # a best fit algorithm could be worth if the sshelves heights are well combined
+    # the width of a shelf will be the width of its first item and won't change
 
-    for m in marchandises:
-        placed: bool = False
+    n_minimum_bins = round(sum(m.l*m.w for m in marchandises_) / (L*W)) + 1
+    bins = [Bin() for _ in range(n_minimum_bins)]
+    j = 0
+    for bin in bins:
+        while bin.add_marchandise(marchandises_[j]):
+            j += 1
+
+    for i, m in enumerate(marchandises_[j::-1]):
+        # first try to add the marchandise in an existing shelf
         for bin in bins:
-            if bin.add_marchandise(m):
-                placed = True
-                break
+            can_add_in_shelf = False
+            for shelf in bin.shelves:
+                if shelf.can_fit(m):
+                    can_add_in_shelf = True
+                    shelf.add_marchandise(m)
 
-        if not placed:
-            new_bin = Bin()
-            if new_bin.add_marchandise(m):
-                bins.append(new_bin)
-            else:
-                raise ValueError(f"the marchandise {m} doesn't fit in an empty bin !")
+            # need to create a new shelf
+            if not can_add_in_shelf:
+                candidates_bins = [bin for bin in bins if bin.can_add_shelf(m.w)]
+                if len(candidates_bins):  # if a bin or more can add a new shelf
+                    selected_bin = min(candidates_bins, key=lambda b: b.remaining_width)
+                    selected_bin.add_marchandise(m)  # the creation of the new shelf is hidden in bin.add_marchandise()
+                    break
+
+                # no place in all shelves and can't add a new shelf in all bins -> create a new bin
+                new_bin = Bin()
+                if new_bin.add_marchandise(m):
+                    bins.append(new_bin)
+                    break
+                else:
+                    # in theory, it can't be trigerred with the data used
+                    raise ValueError(f"the marchandise {m} doesn't fit in an empty bin !")
 
     return bins
 
 
-def test_shelf():
-    random.shuffle(marchandises)  # produces 30 to 32 bins
+def test_shelf_offline():
     s = time.time()
     bins = shelf_2d_bin_packing(marchandises)
     d = time.time() - s
@@ -99,4 +60,4 @@ def test_shelf():
 
 
 if __name__ == '__main__':
-    test_shelf()
+    test_shelf_offline()
