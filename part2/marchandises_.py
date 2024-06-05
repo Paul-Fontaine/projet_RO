@@ -1,9 +1,9 @@
 class Marchandise:
     def __init__(self, name: str, length: int, width: int, height: int):
         self.name = name
-        self.l = length
-        self.w = width
-        self.h = height
+        self.l = int(length)
+        self.w = int(width)
+        self.h = int(height)
 
     def __str__(self):
         return f"{self.l}, {self.w}, {self.h} : {self.name}"

@@ -1,3 +1,4 @@
+import random
 import time
 
 from marchandises_ import *
@@ -31,6 +32,12 @@ class Bin:
         self.remaining_width -= new_shelf.width
         return True
 
+    def __str__(self):
+        str = ""
+        for shelf in self.shelves:
+            str += f"{shelf}\n"
+        str += "\n"
+        return str
 
 class Shelf:
     def __init__(self, max_width):
@@ -51,7 +58,14 @@ class Shelf:
         self.remaining_length -= m.l
         self.width = max(self.width, m.w)  # if the marchandise is the widest of the shelf
 
+    def __str__(self):
+        str = ""
+        for m in self.marchandises:
+            str += f"{m.name}, "
+        return str
 
+
+# it's a first fit algorithm, best fit could be more optimal but if a really optimal solution use the guillotine method
 def shelf_2d_bin_packing(marchandises):
     bins = []
 
@@ -73,11 +87,14 @@ def shelf_2d_bin_packing(marchandises):
 
 
 def test_shelf():
+    random.shuffle(marchandises)  # produces 30 to 32 bins
     s = time.time()
     bins = shelf_2d_bin_packing(marchandises)
     d = time.time() - s
     n = len(bins)
 
+    for bin in bins:
+        print(bin)
     print(f"{n} bins in {d} s")
 
 
