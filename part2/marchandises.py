@@ -9,6 +9,11 @@ class Marchandise:
         return f"{self.name} : {self.l}, {self.w}, {self.h}"
 
 
+L = 11583
+W = 2294
+H = 2569
+
+
 marchandises = [
     Marchandise('Tubes acier', 10000, 1000, 500),
     Marchandise('Tubes acier', 9000, 2000, 700),

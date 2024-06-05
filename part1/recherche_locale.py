@@ -47,14 +47,12 @@ def sol_voisines(composition, score_utility, data):
 
         return liste_solutions_valides
 
-def best_of_voisines(liste_solutions_valides):
-
-    for i in liste_solutions_valides:
-        if i[1]>i≤
+# def best_of_voisines(liste_solutions_valides):
+#
+#     for i in liste_solutions_valides:
+#         if i[1]>i≤
 
 
 print(sol_init(items_dict[:10], 0.6))
 
 best_compo, best_utility = sol_init(items_dict, 0.6) #on initialise la meilleure compo avec la compo aléatoire
-
-while ()
