@@ -2,7 +2,7 @@ items_dict = [
     {'name': 'Rustines', 'weight': 0.05, 'utility': 1.5},
     {'name': 'Maillon rapide', 'weight': 0.05, 'utility': 1.4},
     {'name': 'Démonte-pneus', 'weight': 0.1, 'utility': 1.5},
-    {'name': 'Bouchon valve \nchromé bleu', 'weight': 0.01, 'utility': 0.1},
+    {'name': 'Bouchon valve chromé bleu', 'weight': 0.01, 'utility': 0.1},
     {'name': 'Multi-tool', 'weight': 0.2, 'utility': 1.7},
     {'name': 'Pompe', 'weight': 0.2, 'utility': 1.5},
     {'name': 'Couteau suisse', 'weight': 0.2, 'utility': 1.5},

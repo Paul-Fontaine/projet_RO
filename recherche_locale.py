@@ -6,15 +6,21 @@ def sol_init(data, W):
     utility = 0
     masse_sac = 0
     compo_aleatoire = []
+    print(data)
     new_objet_index_tab = data.copy()
+    print(new_objet_index_tab)
+    print(len(new_objet_index_tab))
     random.shuffle(new_objet_index_tab) #chaque indice va etre determiné aléatoirement
-    compt=1
-    while (masse_sac <= W):
+    print(new_objet_index_tab)
+    print(len(new_objet_index_tab))
 
-        if (masse_sac + data[new_objet_index_tab]["weight"] <= W):
-            utility += data[new_objet_index_tab]["utility"]
-            compo_aleatoire.append(new_objet_index_tab)
-            masse_sac += data[new_objet_index_tab]["weight"]
+    compt=0
+    while (masse_sac <= W):
+        if (masse_sac + new_objet_index_tab[compt]['weight'] <= W):
+            utility += new_objet_index_tab[compt]['utility']
+            masse_sac += new_objet_index_tab[compt]["weight"]
+
+            compo_aleatoire.append(new_objet_index_tab[compt])
     #on a créé une composition de sac aléatoire
         compt+=1
     return compo_aleatoire, utility
@@ -41,8 +47,14 @@ def sol_voisines(composition, score_utility, data):
 
         return liste_solutions_valides
 
+def best_of_voisines(liste_solutions_valides):
+
+    for i in liste_solutions_valides:
+        if i[1]>i≤
 
 
 print(sol_init(items_dict[:10], 0.6))
 
+best_compo, best_utility = sol_init(items_dict, 0.6) #on initialise la meilleure compo avec la compo aléatoire
 
+while ()
