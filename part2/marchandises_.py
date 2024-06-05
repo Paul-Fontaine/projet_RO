@@ -6,7 +6,7 @@ class Marchandise:
         self.h = height
 
     def __str__(self):
-        return f"{self.name} : {self.l}, {self.w}, {self.h}"
+        return f"{self.l}, {self.w}, {self.h} : {self.name}"
 
 
 L = 11583
