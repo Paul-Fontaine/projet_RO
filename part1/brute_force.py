@@ -15,7 +15,7 @@ def make_combinations(items, W: float):
 
 
 def find_max_utility(combinations):
-    return max(combinations, key=lambda c: c['weight'])
+    return max(combinations, key=lambda c: c['utility'])
 
 
 def find_best_bag(items, W: float = 0.6):
