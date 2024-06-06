@@ -133,6 +133,7 @@ def plot_bins(bins):
     # Add the rectangles to each subplot
     for i, bin in enumerate(bins):
         ax = axes[i]
+        # subplot params
         ax.set_xlim(0, L)
         ax.set_ylim(0, W)
         ax.set_aspect('equal')
@@ -148,6 +149,7 @@ def plot_bins(bins):
             'mediumslateblue', 'mediumspringgreen', 'mediumturquoise', 'mediumaquamarine', 'orangered'
         ]
 
+        # add rectangles
         current_x = 0
         current_y = 0
         for s in bin.shelves:
@@ -157,6 +159,7 @@ def plot_bins(bins):
             current_x = 0
             current_y += s.width
 
+    # remove useless axes because we are too strong and don't need 35 bins
     for i in range(len(bins), 35):
         fig.delaxes(axes[i])
 
