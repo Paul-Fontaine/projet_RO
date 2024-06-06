@@ -27,9 +27,8 @@ def shelf_2d_bin_packing(marchandises):
 
 def test_shelf_offline():
     s = time.time()
-    sorted_l = sorted(marchandises, key=lambda m: m.l, reverse=True)
-    sorted_w = sorted(sorted_l, key=lambda m: m.w, reverse=True)
-    bins = shelf_2d_bin_packing(sorted_w)
+    sorted_marchandises = sorted(marchandises, key=lambda m: (m.w, m.l), reverse=True)
+    bins = shelf_2d_bin_packing(sorted_marchandises)
     d = time.time() - s
     n = len(bins)
 
