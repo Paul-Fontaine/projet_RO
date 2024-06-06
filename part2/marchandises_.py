@@ -123,7 +123,7 @@ marchandises = [
 ]
 
 
-def plot_bins(bins):
+def plot_bins(bins, d):
     # Create a figure and a grid of subplots
     fig, axes = plt.subplots(nrows=7, ncols=5, figsize=(15, 21))
 
@@ -138,7 +138,7 @@ def plot_bins(bins):
         ax.set_ylim(0, W)
         ax.set_aspect('equal')
         ax.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
-        ax.set_title(f"Wagon {i}, {sum([s.width for s in bin.shelves])}")
+        ax.set_title(f"Wagon {i}")
         colors = [
             'maroon', 'darkred', 'saddlebrown', 'sienna', 'brown', 'firebrick',
             'darkorange', 'chocolate', 'olive', 'darkolivegreen', 'forestgreen', 'green',
@@ -159,8 +159,18 @@ def plot_bins(bins):
             current_x = 0
             current_y += s.width
 
+    # print infos on the last subplot
+    if len(bins) < 35:
+        ax = axes[len(bins)]
+        ax.set_xlim(0, L)
+        ax.set_ylim(0, W)
+        ax.set_aspect('equal')
+        ax.axis('off')
+        fill_ratio = sum(m.l*m.w for m in marchandises) / (L*W*len(bins))
+        ax.text(L/2, W/2, f"{len(bins)} wagons\n remplissage : {format(fill_ratio*100, '.2f')} % \n {d} s", ha='center', va='center', fontsize=12, color='gray', alpha=1)
+
     # remove useless axes because we are too strong and don't need 35 bins
-    for i in range(len(bins), 35):
+    for i in range(len(bins)+1, 35):
         fig.delaxes(axes[i])
 
     # Adjust layout

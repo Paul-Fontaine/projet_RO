@@ -27,7 +27,7 @@ def shelf_2d_bin_packing(marchandises):
 
 
 def test_shelf_online():
-    # random.shuffle(marchandises)  # produces 30 to 32 bins
+    random.shuffle(marchandises)  # produces 33 to 35 bins
     s = time.time()
     bins = shelf_2d_bin_packing(marchandises)
     d = time.time() - s
@@ -37,7 +37,7 @@ def test_shelf_online():
     #     print(f"remaining_width = {bin.remaining_width}")
     #     print(bin)
     # print(f"{n} bins in {d} s")
-    plot_bins(bins)
+    plot_bins(bins, d)
 
 
 if __name__ == '__main__':

@@ -36,7 +36,7 @@ def test_shelf_offline():
     # for bin in bins:
     #     print(bin)
     # print(f"{n} bins in {d} s")
-    plot_bins(bins)
+    plot_bins(bins, d)
     print()
 
 
