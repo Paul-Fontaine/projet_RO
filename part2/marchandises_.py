@@ -1,3 +1,8 @@
+import random
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+
+
 class Marchandise:
     def __init__(self, name: str, length: int, width: int, height: int):
         self.name = name
@@ -116,3 +121,47 @@ marchandises = [
     Marchandise('Pneus ', 2000, 700, 1100),
     Marchandise('Pneus ', 6000, 1200, 1300)
 ]
+
+
+def plot_bins(bins):
+    # Create a figure and a grid of subplots
+    fig, axes = plt.subplots(nrows=7, ncols=5, figsize=(15, 21))
+
+    # Flatten the axes array for easier iteration
+    axes = axes.flatten()
+
+    # Add the rectangles to each subplot
+    for i, bin in enumerate(bins):
+        ax = axes[i]
+        ax.set_xlim(0, L)
+        ax.set_ylim(0, W)
+        ax.set_aspect('equal')
+        ax.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+        ax.set_title(f"Wagon {i}, {sum([s.width for s in bin.shelves])}")
+        colors = [
+            'maroon', 'darkred', 'saddlebrown', 'sienna', 'brown', 'firebrick',
+            'darkorange', 'chocolate', 'olive', 'darkolivegreen', 'forestgreen', 'green',
+            'darkgreen', 'teal', 'darkcyan', 'navy', 'midnightblue', 'darkblue', 'blue',
+            'indigo', 'purple', 'darkmagenta', 'crimson', 'darkslategray', 'darkslateblue',
+            'mediumblue', 'mediumvioletred', 'royalblue', 'seagreen', 'steelblue', 'darkgoldenrod',
+            'darkorchid', 'darkturquoise', 'deepskyblue', 'dodgerblue', 'mediumseagreen',
+            'mediumslateblue', 'mediumspringgreen', 'mediumturquoise', 'mediumaquamarine', 'orangered'
+        ]
+
+        current_x = 0
+        current_y = 0
+        for s in bin.shelves:
+            for m in s.marchandises:
+                ax.add_patch(patches.Rectangle((current_x, current_y), m.l, m.w, linewidth=1, edgecolor='black', facecolor=random.choice(colors)))
+                current_x += m.l
+            current_x = 0
+            current_y += s.width
+
+    for i in range(len(bins), 35):
+        fig.delaxes(axes[i])
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Show plot
+    plt.show()
