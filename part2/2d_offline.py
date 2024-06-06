@@ -1,5 +1,5 @@
 import time
-from classes import Bin
+from classes_2d import Bin
 from marchandises_ import *
 
 
