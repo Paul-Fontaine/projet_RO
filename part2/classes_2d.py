@@ -42,7 +42,7 @@ class Bin:
 
 class Shelf:
     def __init__(self, max_width):
-        self.max_width = max_width  # the height available in the bin, if an item is too tall it goes in a new bin
+        self.max_width = max_width  # the height available in the bin, if an item is too wide it goes in a new bin
         self.width = 0
         self.remaining_length = L
         self.marchandises = []
@@ -57,6 +57,7 @@ class Shelf:
     def add_marchandise(self, m: Marchandise) -> int:
         self.marchandises.append(m)
         self.remaining_length -= m.l
+        # check if the new marchandise increase the width of shelf, if not it returns 0
         d = m.w - self.width
         if d > 0:
             self.width += d
@@ -99,7 +100,6 @@ def plot_bins_2d(bins, d):
     # Flatten the axes array for easier iteration
     axes = axes.flatten()
 
-    # Add the rectangles to each subplot
     for i, bin in enumerate(bins):
         ax = axes[i]
         # subplot params
@@ -142,9 +142,7 @@ def plot_bins_2d(bins, d):
     for i in range(len(bins)+1, 35):
         fig.delaxes(axes[i])
 
-    # Adjust layout
     plt.tight_layout()
 
-    # Show plot
     plt.show()
 

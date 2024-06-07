@@ -64,7 +64,7 @@ class Shelf:
         # try to add the marchandise in the existing drawers
         for drawer in self.drawers:
             if drawer.can_fit(m):
-                drawer_width_increase, drawer_height_increase = drawer.add_marchandise(m)
+                drawer_width_increase = drawer.add_marchandise(m)
                 self.remaining_width -= drawer_width_increase
                 self.height = max(d.height for d in self.drawers)
                 return True
@@ -102,20 +102,21 @@ class Drawer:
         self.marchandises = []
 
     def can_fit(self, m: Marchandise):
-        if m.w > self.max_width:
+        if m.w > self.max_width:  # marchandise too wide
             return False
-        if m.l > self.remaining_length:
+        if m.l > self.remaining_length:  # marchandise too long
             return False
         return True
 
     def add_marchandise(self, m: Marchandise) -> (int, int):
         self.marchandises.append(m)
         self.remaining_length -= m.l
+        # check if the marchandise increase width and height
         d_w = max(m.w - self.width, 0)
         d_h = max(m.h - self.height, 0)
         self.width += d_w
         self.height += d_h
-        return d_w, d_h
+        return d_w
 
     def __str__(self):
         str = ""
@@ -209,8 +210,6 @@ def plot_bins_3d(bins, time, nrows=4):
     for i in range(len(bins)+1, n_axes):
         fig.delaxes(axes[i])
 
-    # Adjust layout
     # plt.tight_layout()
 
-    # Show plot
     plt.show()
