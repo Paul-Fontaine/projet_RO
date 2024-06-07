@@ -35,7 +35,7 @@ class ArbreBinaire:
             self.best_noeud = parent
 
         # si les objets qu'ils restent à ajouter n'ont aucune chance
-        # de faire dépasser la borne inférieure de l'arbre (totale) on arrête
+        # de dépasser la borne inférieure de l'arbre : on arrête
         if self.max_possible_branch_utility(parent) > self.best_utility:
             # si on dépasse le poids maximal on n'ajoute pas à gauche, mais quand même à droite
             # n+1 a peut-etre une masse trop grande, mais peut-etre pas n+2
@@ -128,13 +128,16 @@ def print_tree(root, val="val", left="left", right="right"):
         print(line)
 
 
-def test_arbre():
-    arbre = ArbreBinaire(items_dict)
+def test_arbre(W: float = 0.6):
+    """
+    run 1000 simulations to get an execution time in ms :)
+    """
+    arbre = ArbreBinaire(items_dict, W)
     arbre.make_tree(arbre.root)
     for object in arbre.get_best_combi():
         print(object)
     print()
-    print(arbre.best_utility)
+    print(f"utility : {arbre.best_utility}")
     print()
 
     setup = """
@@ -151,9 +154,9 @@ best_combi = arbre.get_best_combi()
     print(d, "ms")  # 12.7 ms
 
 
-def test_arbre_time():
+def test_arbre_time(W: float = 0.6):
     s = time.time()
-    arbre = ArbreBinaire(items_dict)
+    arbre = ArbreBinaire(items_dict, W)
     arbre.make_tree(arbre.root)
     d = time.time() - s
     for object in arbre.get_best_combi():

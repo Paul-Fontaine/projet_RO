@@ -1,4 +1,5 @@
 from marchandises_ import *
+import time
 
 
 class Bin:
@@ -123,9 +124,42 @@ class Drawer:
         return str
 
 
-def plot_bins_3d(bins, d):
+def shelves_drawers_3d_first_fit(marchandises):
+    bins = []
+
+    for m in marchandises:
+        placed: bool = False
+        for bin in bins:
+            if bin.add_marchandise(m):
+                placed = True
+                break
+
+        if not placed:
+            new_bin = Bin()
+            if new_bin.add_marchandise(m):
+                bins.append(new_bin)
+            else:
+                # in theory, it can't be trigerred with the data used
+                raise ValueError(f"the marchandise {m} doesn't fit in an empty bin !")
+
+    return bins
+
+
+def test_shelves_drawers_3d_first_fit(marchandises):
+    # random.shuffle(marchandises)
+    s = time.time()
+    bins = shelves_drawers_3d_first_fit(marchandises)
+    d = time.time() - s
+    n = len(bins)
+
+    if n > 24:
+        plot_bins_3d(bins, d, nrows=5)
+    plot_bins_3d(bins, d)
+
+
+def plot_bins_3d(bins, time, nrows=4):
     # Create a figure and a grid of subplots
-    nrows, ncols = 4, 6
+    ncols = 6
     n_axes = nrows*ncols
     fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(15, 21))
 
@@ -162,8 +196,17 @@ def plot_bins_3d(bins, d):
             current_x = 0
             current_y += s.height
 
+    ax = axes[len(bins)]
+    ax.set_xlim(0, L)
+    ax.set_ylim(0, W)
+    ax.set_aspect('equal')
+    ax.axis('off')
+    fill_ratio = sum(m.l * m.w * m.h for m in marchandises) / (L * W * H * len(bins))
+    ax.text(W / 2, H / 2, f"{len(bins)} wagons\n remplissage : {format(fill_ratio * 100, '.2f')} % \n {time} s",
+            ha='center', va='center', fontsize=10, color='gray', alpha=1)
+
     # remove useless axes because we are too strong and don't need 24 bins
-    for i in range(len(bins), n_axes):
+    for i in range(len(bins)+1, n_axes):
         fig.delaxes(axes[i])
 
     # Adjust layout

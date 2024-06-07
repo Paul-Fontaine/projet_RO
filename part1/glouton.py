@@ -1,15 +1,15 @@
 from items_dict import items_dict
 import time
 
-def glouton():
+
+def glouton(W: float = 0.6, items=items_dict):
     s = time.time()
     # sort itmes by the ratio utility²/weight
-    items_sorted = sorted(items_dict, key=lambda o: o['utility']*o['utility'] / o['weight'], reverse=True)
+    items_sorted = sorted(items, key=lambda o: o['utility']*o['utility'] / o['weight'], reverse=True)
 
     bag = []
     bag_weight = 0
     bag_utility = 0
-    W = 0.6
     # ajoute les premiers objets de la liste triée tant que le sac n'est pas trop lourd
     # cependant un objet avec un bon ratio peut être skip s'il est trop lourd pour le poids encore disponible
     for obj in items_sorted:
