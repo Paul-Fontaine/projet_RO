@@ -23,3 +23,30 @@ items_dict = [
     {'name': 'Batterie Portable', 'weight': 0.5, 'utility': 0.4},
     {'name': 'Arrache Manivelle', 'weight': 0.4, 'utility': 0.0}
 ]
+
+items_dict_integers = [
+    {'name': 'Rustines', 'weight': 5, 'utility': 15},
+    {'name': 'Maillon rapide', 'weight': 5, 'utility': 14},
+    {'name': 'Démonte-pneus', 'weight': 10, 'utility': 15},
+    {'name': 'Bouchon valve chromé bleu', 'weight': 1, 'utility': 1},
+    {'name': 'Multi-tool', 'weight': 20, 'utility': 17},
+    {'name': 'Pompe', 'weight': 20, 'utility': 15},
+    {'name': 'Couteau suisse', 'weight': 20, 'utility': 15},
+    {'name': 'Lampes', 'weight': 30, 'utility': 18},
+    {'name': 'Téléphone mobile', 'weight': 40, 'utility': 20},
+    {'name': 'Crème solaire', 'weight': 40, 'utility': 17},
+    {'name': 'Compresses', 'weight': 10, 'utility': 4},
+    {'name': 'Clé de 15', 'weight': 30, 'utility': 10},
+    {'name': 'Désinfectant', 'weight': 20, 'utility': 6},
+    {'name': 'Chambre à air', 'weight': 20, 'utility': 5},
+    {'name': 'Veste de pluie', 'weight': 40, 'utility': 10},
+    {'name': 'Fruits', 'weight': 60, 'utility': 13},
+    {'name': 'Carte IGN', 'weight': 10, 'utility': 2},
+    {'name': 'Pince multiprise', 'weight': 40, 'utility': 8},
+    {'name': 'Barre de céréales', 'weight': 40, 'utility': 8},
+    {'name': 'Gourde', 'weight': 100, 'utility': 20},
+    {'name': 'Pantalon de pluie', 'weight': 40, 'utility': 7},
+    {'name': 'Batterie Portable', 'weight': 50, 'utility': 4},
+    {'name': 'Arrache Manivelle', 'weight': 40, 'utility': 0}
+]
+
