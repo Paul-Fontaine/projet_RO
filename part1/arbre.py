@@ -1,6 +1,6 @@
 import time
 import timeit
-from items_dict import items_dict
+from items_dict import items_dict_integers
 
 
 class Noeud:
@@ -18,7 +18,7 @@ class Noeud:
 
 class ArbreBinaire:
     def __init__(self, items, W: float = 0.6):
-        self.W = W + 0.0001
+        self.W = W
         self.items = items  # liste des noms, poids et utilités des objets
         self.best_utility = 0
         self.best_noeud = None
@@ -128,11 +128,11 @@ def print_tree(root, val="val", left="left", right="right"):
         print(line)
 
 
-def test_arbre(W: float = 0.6):
+def test_arbre(W: int = 60):
     """
     run 1000 simulations to get an execution time in ms :)
     """
-    arbre = ArbreBinaire(items_dict, W)
+    arbre = ArbreBinaire(items_dict_integers, W)
     arbre.make_tree(arbre.root)
     for object in arbre.get_best_combi():
         print(object)
@@ -141,11 +141,11 @@ def test_arbre(W: float = 0.6):
     print()
 
     setup = """
-from items_dict import items_dict
+from items_dict import items_dict_integers
 from arbre import ArbreBinaire
     """
     code = """
-arbre = ArbreBinaire(items_dict)
+arbre = ArbreBinaire(items_dict_integers)
 arbre.make_tree(arbre.root)
 best_combi = arbre.get_best_combi()
     """
@@ -154,18 +154,19 @@ best_combi = arbre.get_best_combi()
     print(d, "ms")  # 12.7 ms
 
 
-def test_arbre_time(W: float = 0.6):
+def test_arbre_time(W: int = 60):
     s = time.time()
-    arbre = ArbreBinaire(items_dict, W)
+    arbre = ArbreBinaire(items_dict_integers, W)
     arbre.make_tree(arbre.root)
     d = time.time() - s
-    for object in arbre.get_best_combi():
-        print(object)
-    print()
-    print(arbre.best_utility)
-    print()
-    print(d * 1000, "ms")
+    # for object in arbre.get_best_combi():
+    #     print(object)
+    # print()
+    print(f"W : {W/100}, utility : {arbre.best_utility/10}, temps : {d} s")
+    # print()
+    # print(d * 1000, "ms")
 
 
 if __name__ == '__main__':
-    test_arbre()
+    for W in [60, 200, 300, 400, 500]:
+        test_arbre_time(W)

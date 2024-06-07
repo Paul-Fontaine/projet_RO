@@ -1,5 +1,5 @@
 import time
-from items_dict import items_dict
+from items_dict import items_dict_integers
 
 
 # complexity O(2^n) : exponential
@@ -27,16 +27,17 @@ def find_best_bag(items, W: float = 0.6):
 def test_brute_force(W: float = 0.6):
     """! brute force is quite slow. It can take up to few minutes if N or C are great"""
     s_time = time.time()
-    best_bag = find_best_bag(items_dict, W)
-    e_time = time.time()
+    best_bag = find_best_bag(items_dict_integers, W)
+    d = time.time() - s_time
 
-    print(f"{e_time-s_time} s")
-    for object in best_bag['objects']:
-        print(object)
-    print(f"poids : {best_bag['weight']}")
-    print(f"utilité : {best_bag['utility']}")
+    # print(f"{e_time-s_time} s")
+    # for object in best_bag['objects']:
+    #     print(object)
+    # print(f"poids : {best_bag['weight']}")
+    # print(f"utilité : {best_bag['utility']}")
+    print(f"W : {W/100}, utilité : {best_bag['utility']/10}, temps : {d} s")
 
 
 if __name__ == '__main__':
-    for W in [1, 2, 3, 4]:
+    for W in [60, 200, 300, 400, 500]:
         test_brute_force(W)
